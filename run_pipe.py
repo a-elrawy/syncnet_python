@@ -38,10 +38,10 @@ parser.add_argument('--videofile',      type=str, default='',   help='Input vide
 parser.add_argument('--reference',      type=str, default='',   help='Video reference');
 parser.add_argument('--facedet_scale',  type=float, default=0.25, help='Scale factor for face detection');
 parser.add_argument('--crop_scale',     type=float, default=0.40, help='Scale bounding box');
-parser.add_argument('--min_track',      type=int, default=2,  help='Minimum facetrack duration');
+parser.add_argument('--min_track',      type=int, default=60,  help='Minimum facetrack duration');
 parser.add_argument('--frame_rate',     type=int, default=25,   help='Frame rate');
 parser.add_argument('--num_failed_det', type=int, default=25,   help='Number of missed detections allowed before tracking is stopped');
-parser.add_argument('--min_face_size',  type=int, default=20,  help='Minimum face size in pixels');
+parser.add_argument('--min_face_size',  type=int, default=60,  help='Minimum face size in pixels');
 parser.add_argument('--initial_model', type=str, default="data/syncnet_v2.model", help='');
 parser.add_argument('--batch_size', type=int, default='20', help='');
 parser.add_argument('--vshift', type=int, default='15', help='');
@@ -436,7 +436,7 @@ with open('blobs.txt', 'r') as f:
   blob_names = [blob_name.strip() for blob_name in blob_names]
 
 # Remove processed videos from the list
-blob_names = blob_names[19840:]
+blob_names = blob_names[123840:]
 
 # Initialize multiple SyncNet models to be used in parallel
 # models = [SyncNetInstance() for _ in range(6)]
