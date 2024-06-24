@@ -43,3 +43,6 @@ data/
 protos/
 utils/
 *.pth
+
+tmp_process
+out2

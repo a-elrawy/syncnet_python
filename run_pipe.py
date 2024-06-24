@@ -264,7 +264,7 @@ def scene_detect(opt):
 def download_blob(blob_name, destination_file_name):
     """Downloads a blob from the bucket."""
     blob = source_bucket.blob(blob_name)
-    blob.download_to_filename(destination_file_name)
+    blob.download_to_filename(destination_file_name, raw_download=True)
 
 from copy import deepcopy
 
@@ -347,18 +347,23 @@ def process_video(video_file):
 
     dists = []
     confs = []
+    offsets = []
     for idx, fname in enumerate(flist):
         offset, conf, dist = s.evaluate(opt_tmp,videofile=fname)
         dists.append(dist)
         confs.append(conf)
+        offsets.append(offset)
       
           
     # ==================== PRINT RESULTS TO FILE ====================
 
     # Get Avg confidence
     print('Average confidence: %.2f'%np.mean(confs))
+    print(offsets)
+    print('AV Offset: %.2f'%np.mean(offsets))
+    print('AV Dist: %.2f'%np.mean(dists))
     # Save video if confidence is high
-    if np.mean(confs) > 3:
+    if  np.abs(np.mean(offsets)) <  3:
       # savepath = os.path.join(opt_tmp.work_dir,opt_tmp.reference,'tracks.pckl')
 
       # with open(savepath, 'wb') as fil:
@@ -369,7 +374,7 @@ def process_video(video_file):
       #     pickle.dump(dists, fil)
         
       # Upload the original video to GCP
-      new_videofile_name_with_conf = opt_tmp.videofile.split('/')[-1].split('.')[0] + '_%.2f'%np.mean(confs) + '.mp4'
+      new_videofile_name_with_conf = "offset_filter/" + opt_tmp.videofile.split('/')[-1].split('.')[0] + '_%.2f'%np.mean(confs) + '_%.2f'%np.mean(offsets) + '.mp4'
       blob = bucket.blob(new_videofile_name_with_conf)
       blob.upload_from_filename(opt_tmp.videofile)
       print('Uploaded %s to GCP as %s' % (opt_tmp.videofile, new_videofile_name_with_conf))
